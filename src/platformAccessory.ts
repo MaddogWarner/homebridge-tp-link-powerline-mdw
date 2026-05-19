@@ -1,19 +1,23 @@
 import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
 
-import { TpLinkPowerlinePlatform } from './platform';
+import { TpLinkPowerlinePlatform } from './platform.js';
 
 /**
  * Platform Accessory
- * An instance of this class is created for each accessory your platform registers
+ * An instance of this class is created for each accessory your platform registers.
  * Each accessory may expose multiple services of different service types.
  */
 export class TpLinkPowerlinePlatformAccessory {
   private service: Service;
+  private intervalId: ReturnType<typeof setInterval> | undefined;
+  private lastStatus: CharacteristicValue;
 
   constructor(
     private readonly platform: TpLinkPowerlinePlatform,
     private readonly accessory: PlatformAccessory,
   ) {
+    // Initialise cached status to UNKNOWN so the first poll sets the real value
+    this.lastStatus = this.platform.Characteristic.WiFiSatelliteStatus.UNKNOWN;
 
     // set accessory information
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
@@ -35,84 +39,59 @@ export class TpLinkPowerlinePlatformAccessory {
     this.accessory.category = this.platform.api.hap.Categories.RANGE_EXTENDER;
 
     // get the WiFi Satellite service if it exists, otherwise create a new WiFi Satellite service
-    // you can create multiple services for each accessory
     this.service = this.accessory.getService(this.platform.Service.WiFiSatellite) ||
       this.accessory.addService(this.platform.Service.WiFiSatellite);
 
-    // set the service name, this is what is displayed as the default name on the Home app
-    // in this example we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
     this.service.setCharacteristic(this.platform.Characteristic.Name, accessory.context.name);
 
-    // each service must implement at-minimum the "required characteristics" for the given service type
-    // see https://developers.homebridge.io/#/service/Lightbulb
-
-    // register handlers for the Status Characteristic
+    // getStatus returns the cached value to avoid concurrent pings with the poller
     this.service.getCharacteristic(this.platform.Characteristic.WiFiSatelliteStatus)
-      .onGet(this.getStatus.bind(this)); // GET - bind to the `getStatus` method below
+      .onGet(this.getStatus.bind(this));
 
-    /**
-     * Updating characteristics values asynchronously.
-     *
-     * Here we update the status states every 10 seconds
-     * the `updateCharacteristic` method.
-     *
-     */
-    setInterval(async () => {
+    // Read poll interval from config (default 10000 ms, minimum 1000 ms)
+    const pollInterval: number = Math.max(
+      1000,
+      (accessory.context.config?.pollInterval as number | undefined) ?? 10000,
+    );
+
+    // Poll the device on a configurable interval and push status updates to HomeKit.
+    // The interval ID is stored so it can be cleared in destroy().
+    this.intervalId = setInterval(async () => {
       try {
         const ping = await accessory.context.device.ping();
-        const status = ping
+        this.lastStatus = ping
           ? this.platform.Characteristic.WiFiSatelliteStatus.CONNECTED
           : this.platform.Characteristic.WiFiSatelliteStatus.NOT_CONNECTED;
 
-        // push the new value to HomeKit
-        this.service.updateCharacteristic(this.platform.Characteristic.WiFiSatelliteStatus, status);
-
-        this.platform.log.debug('Updating status:', 'Connected');
+        this.platform.log.debug('Polling status:', ping ? 'Connected' : 'Not Connected');
       } catch (error) {
-        this.platform.log.error(`${error}`);
-
-        // push the new value to HomeKit
-        this.service.updateCharacteristic(
-          this.platform.Characteristic.WiFiSatelliteStatus,
-          this.platform.Characteristic.WiFiSatelliteStatus.NOT_CONNECTED,
-        );
-
-        this.platform.log.debug('Updating status:', 'Not Connected');
+        this.platform.log.error('Poll error:', error instanceof Error ? error.message : String(error));
+        this.lastStatus = this.platform.Characteristic.WiFiSatelliteStatus.NOT_CONNECTED;
       }
-    }, 10000);
+
+      this.service.updateCharacteristic(this.platform.Characteristic.WiFiSatelliteStatus, this.lastStatus);
+    }, pollInterval);
   }
 
   /**
-   * Handle the "GET" requests from HomeKit
-   * These are sent when HomeKit wants to know the current state of the accessory, for example, checking if a Light bulb is on.
-   *
-   * GET requests should return as fast as possbile. A long delay here will result in
-   * HomeKit being unresponsive and a bad user experience in general.
-   *
-   * If your device takes time to respond you should update the status of your device
-   * asynchronously instead using the `updateCharacteristic` method instead.
+   * Call when the accessory is removed from Homebridge to prevent interval leaks.
+   */
+  destroy(): void {
+    if (this.intervalId !== undefined) {
+      clearInterval(this.intervalId);
+      this.intervalId = undefined;
+      this.platform.log.debug('Cleared polling interval for:', this.accessory.displayName);
+    }
+  }
+
+  /**
+   * Handle GET requests from HomeKit.
+   * Returns the last cached status immediately to avoid HomeKit timeouts.
+   * The poller keeps the cached value up to date.
    */
   async getStatus(): Promise<CharacteristicValue> {
-    let status = this.platform.Characteristic.WiFiSatelliteStatus.UNKNOWN;
-
-    try {
-      await this.accessory.context.device.ping();
-
-      status = this.platform.Characteristic.WiFiSatelliteStatus.CONNECTED;
-
-      this.platform.log.debug('Get Status ->', 'Connected');
-    } catch (error) {
-      this.platform.log.error(`${error}`);
-
-      status = this.platform.Characteristic.WiFiSatelliteStatus.NOT_CONNECTED;
-
-      this.platform.log.debug('Get Status ->', 'Not Connected');
-    }
-
-    // if you need to return an error to show the device as "Not Responding" in the Home app:
-    // throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
-
-    return status;
+    this.platform.log.debug('Get Status (cached) ->', this.lastStatus);
+    return this.lastStatus;
   }
 
 }

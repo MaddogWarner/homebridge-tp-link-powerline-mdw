@@ -1,44 +1,41 @@
 {
   "displayName": "TP-Link Powerline",
   "name": "homebridge-tp-link-powerline",
-  "version": "1.0.1",
-  "betaVersion": "1.0.1",
-  "description": "Homebridgee TP-Link Powerline.",
+  "version": "2.0.0",
+  "description": "Homebridge TP-Link Powerline.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/EpicKris/homebridge-tp-link-powerline.git"
+    "url": "git://github.com/MaddogWarner/homebridge-tp-link-powerline.git"
   },
   "bugs": {
-    "url": "https://github.com/EpicKris/homebridge-tp-link-powerline/issues"
+    "url": "https://github.com/MaddogWarner/homebridge-tp-link-powerline/issues"
   },
   "engines": {
-    "node": ">=10.17.0",
-    "homebridge": ">=1.4.1"
+    "node": "^22.12.0 || ^24.0.0",
+    "homebridge": "^1.6.0 || ^2.0.0"
   },
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "lint": "eslint src/**.ts --max-warnings=0",
+    "lint": "eslint src/",
     "watch": "npm run build && npm link && nodemon",
-    "build": "rimraf ./dist && tsc",
+    "build": "rm -rf ./dist && tsc",
     "prepublishOnly": "npm run lint && npm run build"
   },
   "keywords": [
     "homebridge-plugin"
   ],
   "devDependencies": {
-    "@types/node": "^14.14.31",
-    "@types/ping": "^0.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.16.1",
-    "@typescript-eslint/parser": "^4.16.1",
-    "eslint": "^7.21.0",
-    "homebridge": "^1.4.1",
-    "nodemon": "^2.0.7",
-    "rimraf": "^3.0.2",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.2.2"
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "homebridge": "^2.0.0",
+    "nodemon": "^3.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.0.0"
   },
   "dependencies": {
-    "node-tp-link-powerline": "^1.0.0"
+    "node-tp-link-powerline": "1.0.0"
   }
 }

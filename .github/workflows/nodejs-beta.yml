@@ -9,15 +9,15 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [22.x, 24.x]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: npm install and build
@@ -30,18 +30,17 @@ jobs:
   publish-npm:
     if: github.repository == 'EpicKris/homebridge-tp-link-powerline'
 
-    needs: build # only run if build succeeds
+    needs: build
 
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 10 # use the minimum required version
+          node-version: 24.x
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: node .github/workflows/prerelease.js
       - run: npm --no-git-tag-version version pre --preid=beta
       - run: npm publish --tag=beta
         env:
