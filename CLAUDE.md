@@ -43,7 +43,7 @@ This is a **Homebridge Dynamic Platform Plugin** — a single npm package that r
 ### Constants (`src/settings.ts`)
 
 `PLATFORM_NAME = 'TpLinkPowerline'` — used in config.json and `registerPlatform`.
-`PLUGIN_NAME = 'homebridge-tp-link-powerline'` — used in `registerPlatformAccessories`.
+`PLUGIN_NAME = 'homebridge-tp-link-powerline-mdw'` — used in `registerPlatformAccessories`.
 
 ### Module system
 

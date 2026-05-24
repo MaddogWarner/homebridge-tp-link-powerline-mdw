@@ -21,7 +21,7 @@ A [Homebridge](https://homebridge.io) platform plugin for TP-Link Powerline adap
 Install via the Homebridge UI, or manually:
 
 ```sh
-npm install -g homebridge-tp-link-powerline
+npm install -g homebridge-tp-link-powerline-mdw
 ```
 
 ## Configuration

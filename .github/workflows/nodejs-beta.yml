@@ -28,7 +28,7 @@ jobs:
           CI: true
 
   publish-npm:
-    if: github.repository == 'EpicKris/homebridge-tp-link-powerline'
+    if: github.repository == 'MaddogWarner/homebridge-tp-link-powerline-mdw'
 
     needs: build
 

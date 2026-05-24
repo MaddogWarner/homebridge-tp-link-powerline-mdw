@@ -1,15 +1,15 @@
 {
   "displayName": "TP-Link Powerline",
-  "name": "homebridge-tp-link-powerline",
+  "name": "homebridge-tp-link-powerline-mdw",
   "version": "2.0.0",
   "description": "Homebridge TP-Link Powerline.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/MaddogWarner/homebridge-tp-link-powerline.git"
+    "url": "git://github.com/MaddogWarner/homebridge-tp-link-powerline-mdw.git"
   },
   "bugs": {
-    "url": "https://github.com/MaddogWarner/homebridge-tp-link-powerline/issues"
+    "url": "https://github.com/MaddogWarner/homebridge-tp-link-powerline-mdw/issues"
   },
   "engines": {
     "node": "^22.12.0 || ^24.0.0",

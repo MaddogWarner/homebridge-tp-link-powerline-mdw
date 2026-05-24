@@ -1,5 +1,7 @@
 # Changelog
 
+> **Package rename:** This package is published on npm as `homebridge-tp-link-powerline-mdw`. The GitHub repository is [MaddogWarner/homebridge-tp-link-powerline-mdw](https://github.com/MaddogWarner/homebridge-tp-link-powerline-mdw).
+
 ## [2.0.0] - 2026-05-19
 
 ### Breaking Changes
