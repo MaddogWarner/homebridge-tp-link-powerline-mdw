@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-
     strategy:
       matrix:
         node-version: [22.x, 24.x]
@@ -34,14 +33,22 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 24.x
           registry-url: https://registry.npmjs.org/
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest && npm --version
+      - name: Remove placeholder auth token so npm uses OIDC
+        run: |
+          npmrc="${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
+          sed -i '/_authToken/d; /always-auth/d' "$npmrc"
       - run: npm ci
       - run: npm --no-git-tag-version version pre --preid=beta
-      - run: npm publish --tag=beta
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+      - run: npm publish --tag=beta --access public
