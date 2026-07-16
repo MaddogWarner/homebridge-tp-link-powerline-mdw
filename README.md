@@ -1,3 +1,6 @@
+> [!WARNING]
+> **This project is deprecated.**
+> It is no longer maintained and will not receive further updates, bug fixes, or compatibility changes. It remains installable for now, but you should plan to migrate away — the repository may be archived and support removed entirely in a future update.
 
 <p align="center">
 
