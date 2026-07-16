@@ -38,5 +38,9 @@
   },
   "dependencies": {
     "node-tp-link-powerline": "1.0.0"
+  },
+  "overrides": {
+    "get-ip-range": ">=4.0.0",
+    "ip": "1.1.8"
   }
 }
