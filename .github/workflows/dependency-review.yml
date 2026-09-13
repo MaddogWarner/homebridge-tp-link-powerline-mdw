@@ -20,3 +20,14 @@ jobs:
         with:
           fail-on-severity: high
           comment-summary-in-pr: on-failure
+          # GHSA-2p57-rm9w-gvfp — SSRF in `ip`, high severity, and there is no
+          # patched version at any release. It reaches this plugin transitively
+          # via node-tp-link-powerline -> local-devices -> get-ip-range, so it
+          # cannot be resolved from here and the gate can never be satisfied.
+          #
+          # Only surfaces on PRs that *touch* `ip`; raising the override floor
+          # 1.1.8 -> 1.1.9 (a real fix for a separate advisory) is what tripped
+          # it. Reverting that fix to keep the gate quiet would be strictly
+          # worse for users, so the unfixable advisory is allowed explicitly
+          # and documented in the README instead of being silently tolerated.
+          allow-ghsas: GHSA-2p57-rm9w-gvfp

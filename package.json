@@ -1,7 +1,7 @@
 {
   "displayName": "TP-Link Powerline",
   "name": "homebridge-tp-link-powerline-mdw",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Homebridge TP-Link Powerline.",
   "license": "Apache-2.0",
   "repository": {
@@ -41,6 +41,6 @@
   },
   "overrides": {
     "get-ip-range": ">=4.0.0",
-    "ip": "1.1.8"
+    "ip": "1.1.9"
   }
 }
