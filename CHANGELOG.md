@@ -2,6 +2,20 @@
 
 > **Package rename:** This package is published on npm as `homebridge-tp-link-powerline-mdw`. The GitHub repository is [MaddogWarner/homebridge-tp-link-powerline-mdw](https://github.com/MaddogWarner/homebridge-tp-link-powerline-mdw).
 
+## [2.0.3] - 2026-09-13
+
+**Final release.** This package is deprecated and will receive no further updates. See the README for the full notice, including a known unfixable advisory in the dependency chain.
+
+### Security
+
+- `qs` 6.15.2 → 6.16.0, clearing GHSA-4mjr-xmp4-gh2g and GHSA-x5fp-wj9c-mxmx.
+- Raised the `ip` override floor from `1.1.8` to `1.1.9`. The pin had fallen below the patched version, so the override that once fixed GHSA-78xj-cgh5-2h22 had started holding it back.
+
+### Known issues, unresolved
+
+- **`ip` GHSA-2p57-rm9w-gvfp (high, SSRF) has no patched version at any release** and reaches this plugin transitively via `node-tp-link-powerline` → `local-devices` → `get-ip-range`. It cannot be fixed without the upstream chain moving off `ip`.
+- **`ip-address` cannot be overridden to a patched release.** Forcing 10.x breaks `get-ip-range` at runtime (`TypeError: Cannot read properties of null (reading 'valid')`), which would break device discovery entirely. Verified by smoke test; the vulnerable 6.4.0 is retained deliberately as the lesser harm.
+
 ## [2.0.0] - 2026-05-19
 
 ### Breaking Changes

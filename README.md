@@ -1,6 +1,15 @@
-> [!WARNING]
-> **This project is deprecated.**
-> It is no longer maintained and will not receive further updates, bug fixes, or compatibility changes. It remains installable for now, but you should plan to migrate away — the repository may be archived and support removed entirely in a future update.
+> [!CAUTION]
+> **This project is deprecated and no longer maintained.**
+>
+> - **`2.0.3` is the final release.** It contains security fixes only. There will be no further releases.
+> - The npm package [`homebridge-tp-link-powerline-mdw`](https://www.npmjs.com/package/homebridge-tp-link-powerline-mdw) is **deprecated on npm as of 13/09/2026**. Every published version carries a deprecation warning.
+> - **This repository will be archived (made read-only) on or after 13/12/2026.** Issues and pull requests are no longer being accepted or actioned before then.
+>
+> **Known unfixable vulnerability — please read.** This plugin depends on `node-tp-link-powerline` → `local-devices` → `get-ip-range`, which pulls in [`ip`](https://github.com/advisories/GHSA-2p57-rm9w-gvfp), a package with a **high-severity SSRF advisory and no patched version at any release**. It cannot be fixed from here — the fix would require the upstream chain to move off `ip` entirely. `2.0.3` raises every override floor that *can* be raised; this one cannot.
+>
+> A related `ip-address` advisory is also unresolvable: overriding it to a patched 10.x release breaks `get-ip-range` at runtime (`TypeError: Cannot read properties of null`), which would break device discovery — the plugin's core function. This was tested, not assumed.
+>
+> If you run this plugin, weigh that against your network exposure and plan to migrate away. You are welcome to fork it — the licence permits it and no permission is needed.
 
 <p align="center">
 
