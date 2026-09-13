@@ -3,7 +3,7 @@
 >
 > - **`2.0.3` is the final release.** It contains security fixes only. There will be no further releases.
 > - The npm package [`homebridge-tp-link-powerline-mdw`](https://www.npmjs.com/package/homebridge-tp-link-powerline-mdw) is **deprecated on npm as of 13/09/2026**. Every published version carries a deprecation warning.
-> - **This repository will be archived (made read-only) on or after 13/12/2026.** Issues and pull requests are no longer being accepted or actioned before then.
+> - **This repository is archived and read-only.** Issues and pull requests are closed and are not being accepted. The code remains available to read and to fork.
 >
 > **Known unfixable vulnerability — please read.** This plugin depends on `node-tp-link-powerline` → `local-devices` → `get-ip-range`, which pulls in [`ip`](https://github.com/advisories/GHSA-2p57-rm9w-gvfp), a package with a **high-severity SSRF advisory and no patched version at any release**. It cannot be fixed from here — the fix would require the upstream chain to move off `ip` entirely. `2.0.3` raises every override floor that *can* be raised; this one cannot.
 >
